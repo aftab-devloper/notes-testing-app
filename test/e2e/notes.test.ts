@@ -23,7 +23,10 @@ test('DELETE /notes/:id — should delete a note', async ({ request }) => {
   await request.post('http://localhost:3000/notes', {
     data: { title: 'Delete Me', content: 'Content' },
   });
-  const res = await request.delete('http://localhost:3000/notes/3');
+  const getRes = await request.get('http://localhost:3000/notes');
+  const notes = await getRes.json();
+  const lastNote = notes[notes.length - 1];
+  const res = await request.delete(`http://localhost:3000/notes/${lastNote.id}`);
   expect(res.status()).toBe(200);
   const body = await res.json();
   expect(body.title).toBe('Delete Me');
