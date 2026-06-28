@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: "Notes AI Testing"
+
+prompts:
+  - "You are a helpful notes assistant. Answer this: {{question}}"
+
+providers:
+  - id: https://api.groq.com/openai/v1/chat/completions
+    config:
+      method: POST
+      headers:
+        Authorization: "Bearer ${GROQ_API_KEY}"
+        Content-Type: "application/json"
+      body:
+        model: "llama-3.3-70b-versatile"
+        messages:
+          - role: user
+            content: "{{prompt}}"
+
+tests:
+  - vars:
+      question: "Summarize my note about meeting"
+    assert:
+      - type: icontains
+        value: meeting
+
+  - vars:
+      question: "Improve this note: bad writing"
+    assert:
+      - type: icontains
+        value: writing
+
+  - vars:
+      question: "Give me a title for a note about football"
+    assert:
+      - type: icontains
+        value: football
